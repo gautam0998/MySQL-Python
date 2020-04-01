@@ -374,23 +374,22 @@ def displayres():
         Label(diswin, text=x[2]).grid(row=2+i,column=3)
         Label(diswin, text=x[3]).grid(row=2+i,column=4)
 
-if __name__ == "__main__":
-    password1 = input("Enter Your MySQL Password: ")
-    #Root Window
-    root = Tk()
-    root.title("Open Ended")
-    root.geometry("300x300")
+def guestpage():
+    #user Window
+    user = Toplevel(root)
+    user.title("Open Ended")
+    user.geometry("300x300")
 
-    ins = Button(root, text = "Insert Record", command = insertform)  #used lambda since a function cannot be passed values in command so created a new function
+    ins = Button(user, text = "Insert Record", command = insertform)  #used lambda since a function cannot be passed values in command so created a new function
     ins.pack(fill = BOTH, expand = TRUE)
 
-    upd = Button(root, text = "Update Record", command = updateform)
+    upd = Button(user, text = "Update Record", command = updateform)
     upd.pack(fill = BOTH, expand = TRUE)
 
-    dele = Button(root, text = "Delete Record", command = deleteform)
+    dele = Button(user, text = "Delete Record", command = deleteform)
     dele.pack(fill = BOTH, expand = TRUE)
 
-    disp = Button(root, text = "Display Records", command = displayres)
+    disp = Button(user, text = "Display Records", command = displayres)
     disp.pack(fill = BOTH, expand = TRUE)
 
     checkdb()
@@ -409,6 +408,21 @@ if __name__ == "__main__":
     mycursor.close()
     mydb.close()
 
+def adminlogin():
+    pass
+
+if __name__ == "__main__":
+    password1 = input("Enter Your MySQL Password: ")
+
+    root = Tk()
+    root.title("Open Ended")
+    root.geometry("300x300")
+
+    adm = Button(root, text = "Aministrator", command = adminlogin)
+    adm.pack(fill = BOTH, expand = TRUE)
+
+    guest = Button(root, text = "Guest", command = guestpage)
+    guest.pack(fill = BOTH, expand = TRUE)
+
     root.mainloop()
 
-    
