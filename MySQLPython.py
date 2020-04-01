@@ -353,7 +353,7 @@ def displayres():
     diswin.grab_set()
 
     labtop = Label(diswin, text = "The records are: ")
-    labtop.grid(row=1,column=1,columnspan=4,sticky=W,pady=20)
+    labtop.grid(row=1,column=1,columnspan=4,sticky=W)
 
     labid = Label(diswin, text = "ID")
     labid.grid(row=2,column=1,padx=10)
@@ -369,14 +369,35 @@ def displayres():
     
     mycursor.execute("SELECT * FROM Products")
     myresult = mycursor.fetchall()
-
+    results = Listbox(diswin)
     i = 0
+    var = IntVar()
+    l = []
     for x in myresult:
         i = i + 1
-        Label(diswin, text=x[0]).grid(row=2+i,column=1)
-        Label(diswin, text=x[1]).grid(row=2+i,column=2)
-        Label(diswin, text=x[2]).grid(row=2+i,column=3)
-        Label(diswin, text=x[3]).grid(row=2+i,column=4)
+        tmp = Label(diswin, text=x[0])
+        tmp.grid(row=2+i,column=1)
+        l.append(tmp)
+        tmp = Label(diswin, text=x[1])
+        tmp.grid(row=2+i,column=2)
+        l.append(tmp)
+        tmp = Label(diswin, text=x[2])
+        tmp.grid(row=2+i,column=3)
+        l.append(tmp)
+        tmp = Label(diswin, text=x[3])
+        tmp.grid(row=2+i,column=4)
+        l.append(tmp)
+        print(i)
+        if i>=2:
+            print("Hello",i)
+            b = Button(diswin, text = "Next Page", command = lambda: var.set(1))
+            b.grid(row=3+i,column=1, columnspan=4)
+            b.wait_variable(var)
+            b.destroy()
+            for x in l:
+                x.destroy()
+            i = 0
+            
 
 def checkadmintable(mydb, mycursor):
     #Check for Table
