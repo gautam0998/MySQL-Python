@@ -438,8 +438,23 @@ def adminlogin():
     subbut.grid(row = 4, column = 1, columnspan = 3)
 
 if __name__ == "__main__":
+    flag = 1
     print("Enter your MySQL Password Below: ")
-    password1 = getpass.getpass()
+    while(flag):
+        password1 = getpass.getpass()
+        try:
+            mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password=password1,
+            database="mydatabase"
+            )
+            flag = 0
+
+        except:
+            print("Wrong Password. Enter again")
+    
+    
 
     root = Tk()
     root.title("Open Ended")
@@ -452,4 +467,3 @@ if __name__ == "__main__":
     guest.pack(fill = BOTH, expand = TRUE)
 
     root.mainloop()
-
