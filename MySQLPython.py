@@ -401,17 +401,15 @@ def guestpage():
     #user Window
     user = Toplevel(root)
     user.grab_set()
-    user.title("Open Ended")
+    user.title("Guest User")
     user.geometry("300x300")
 
     ins = Button(user, text = "Insert Record", command = lambda: insertform(buttons))  #used lambda since a function cannot be passed values in command so created a new function
     ins.pack(fill = BOTH, expand = TRUE)
 
-    upd = Button(user, text = "Update Record", command = updateform)
-    upd.pack(fill = BOTH, expand = TRUE)
+    upd = Button()
 
-    dele = Button(user, text = "Delete Record", command = lambda: deleteform(buttons))
-    dele.pack(fill = BOTH, expand = TRUE)
+    dele = Button()
 
     disp = Button(user, text = "Display Records", command = displayres)
     disp.pack(fill = BOTH, expand = TRUE)
@@ -433,6 +431,42 @@ def guestpage():
     mycursor.close()
     mydb.close()
 
+def adminpage():
+    #Admin Window
+    admin = Toplevel(root)
+    admin.grab_set()
+    admin.title("Admin Page")
+    admin.geometry("300x300")
+
+    ins = Button(admin, text = "Insert Record", command = lambda: insertform(buttons))  #used lambda since a function cannot be passed values in command so created a new function
+    ins.pack(fill = BOTH, expand = TRUE)
+
+    upd = Button(admin, text = "Update Record", command = updateform)
+    upd.pack(fill = BOTH, expand = TRUE)
+
+    dele = Button(admin, text = "Delete Record", command = lambda: deleteform(buttons))
+    dele.pack(fill = BOTH, expand = TRUE)
+
+    disp = Button(admin, text = "Display Records", command = displayres)
+    disp.pack(fill = BOTH, expand = TRUE)
+
+    buttons = [ins,upd,dele,disp]
+    checkdb()
+
+    #connecting
+    mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password=password1,
+            database="mydatabase"
+        )
+
+    mycursor = mydb.cursor()
+    checktable(mydb, mycursor)
+    checkentries(mydb, mycursor,buttons)
+    mycursor.close()
+    mydb.close()
+    
 def adminlogin():
 
     def admincheck():
@@ -472,7 +506,7 @@ def adminlogin():
                     admin.destroy()
                     mycursor.close()
                     mydb.cursor()
-                    guestpage()
+                    adminpage()
 
     admin = Toplevel(root)
     admin.grab_set()
@@ -523,7 +557,7 @@ if __name__ == "__main__":
     root.title("Open Ended")
     root.geometry("300x300")
 
-    adm = Button(root, text = "Aministrator", command = adminlogin)
+    adm = Button(root, text = "Administrator", command = adminlogin)
     adm.pack(fill = BOTH, expand = TRUE)
 
     guest = Button(root, text = "Guest", command = guestpage)
