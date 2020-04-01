@@ -40,9 +40,12 @@ def checktable(mydb, mycursor):
     if flag == FALSE:
         mycursor.execute("CREATE TABLE Products (id INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL, Price INT NOT NULL, Quantity INT NOT NULL)")
 
-def checkentries(mydb, mycursor,upd,dele,disp):
+def checkentries(mydb, mycursor,buttons):
     mycursor.execute("SELECT * FROM Products")
     myresult = mycursor.fetchall()
+    upd = buttons[1]
+    dele = buttons[2]
+    disp = buttons[3]
     if len(myresult) == 0:
         upd['state'] = DISABLED
         dele['state'] = DISABLED
@@ -53,7 +56,7 @@ def checkentries(mydb, mycursor,upd,dele,disp):
         dele['state'] = NORMAL
         disp['state'] = NORMAL
 
-def insertform():
+def insertform(buttons):
     flag=0   #used to show and hide the error label
     def insertformcheck():
         nonlocal flag
@@ -64,7 +67,7 @@ def insertform():
         else:
             flag = 0
             laberror.grid_remove()
-            insertval(entname.get(),float(entprice.get()),float(entquantity.get()))
+            insertval(entname.get(),float(entprice.get()),float(entquantity.get()),buttons)
             inswin.grab_release()   #makes the root window active again
             inswin.destroy()
 
@@ -99,7 +102,7 @@ def insertform():
     subbut = Button(inswin, text = "Submit", command = insertformcheck )
     subbut.grid(row=7,column=1, columnspan = 3,pady=20)
 
-def insertval(Name,Price,Quantity):
+def insertval(Name,Price,Quantity,buttons):
     mydb = mysql.connector.connect(
         host="localhost",
         user="root",
@@ -112,7 +115,7 @@ def insertval(Name,Price,Quantity):
     val = (Name,Price,Quantity)
     mycursor.execute(sql, val)
     mydb.commit()
-    checkentries(mydb,mycursor)
+    checkentries(mydb,mycursor,buttons)
     mydb.close()
     mycursor.close()
     
@@ -245,7 +248,7 @@ def updateform():
     subbut = Button(updwin, text = "Submit", command = updateformcheck )
     subbut.grid(row=10,column=1, columnspan = 3,pady=20)
 
-def deleteform():
+def deleteform(buttons):
 
     def deleteformcheck():
         mydb = mysql.connector.connect(
@@ -277,7 +280,7 @@ def deleteform():
                 mycursor.execute(sql % val)
                 laberror.grid_remove()
                 mydb.commit()
-                checkentries(mydb,mycursor)
+                checkentries(mydb,mycursor,buttons)
                 mycursor.close()
                 mydb.close()
                 delwin.grab_release()
@@ -304,7 +307,7 @@ def deleteform():
                 mycursor.execute(sql % val)
                 laberror.grid_remove()
                 mydb.commit()
-                checkentries(mydb,mycursor)
+                checkentries(mydb,mycursor,buttons)
                 mycursor.close()
                 mydb.close()
                 delwin.grab_release()
@@ -380,18 +383,19 @@ def guestpage():
     user.title("Open Ended")
     user.geometry("300x300")
 
-    ins = Button(user, text = "Insert Record", command = insertform)  #used lambda since a function cannot be passed values in command so created a new function
+    ins = Button(user, text = "Insert Record", command = lambda: insertform(buttons))  #used lambda since a function cannot be passed values in command so created a new function
     ins.pack(fill = BOTH, expand = TRUE)
 
     upd = Button(user, text = "Update Record", command = updateform)
     upd.pack(fill = BOTH, expand = TRUE)
 
-    dele = Button(user, text = "Delete Record", command = deleteform)
+    dele = Button(user, text = "Delete Record", command = lambda: deleteform(buttons))
     dele.pack(fill = BOTH, expand = TRUE)
 
     disp = Button(user, text = "Display Records", command = displayres)
     disp.pack(fill = BOTH, expand = TRUE)
 
+    buttons = [ins,upd,dele,disp]
     checkdb()
 
     #connecting
@@ -404,7 +408,7 @@ def guestpage():
 
     mycursor = mydb.cursor()
     checktable(mydb, mycursor)
-    checkentries(mydb, mycursor,upd,dele,disp)
+    checkentries(mydb, mycursor,buttons)
     mycursor.close()
     mydb.close()
 
