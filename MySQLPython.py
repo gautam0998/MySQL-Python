@@ -1,5 +1,6 @@
 from tkinter import *
 import mysql.connector
+import getpass
 
 def checkdb():
     #Connecting
@@ -380,6 +381,7 @@ def displayres():
 def guestpage():
     #user Window
     user = Toplevel(root)
+    user.grab_set()
     user.title("Open Ended")
     user.geometry("300x300")
 
@@ -413,10 +415,31 @@ def guestpage():
     mydb.close()
 
 def adminlogin():
-    pass
+    admin = Toplevel(root)
+    admin.grab_set()
+    admin.title("Login")
+
+    labtop = Label(admin, text = "Administrator Login")
+    labtop.grid(row = 1, column = 1, columnspan = 3)
+
+    usernamelab = Label(admin, text = "Username: ")
+    usernamelab.grid(row = 2, column = 1, pady = 20, sticky = W)
+
+    passwordlab = Label(admin, text = "Password: ")
+    passwordlab.grid(row = 3, column = 1, pady = 20, sticky = W)
+
+    username = Entry(admin)
+    username.grid(row = 2, column = 2)
+
+    password = Entry(admin, show = "*")
+    password.grid(row = 3, column = 2)
+
+    subbut = Button(admin, text = "Submit")
+    subbut.grid(row = 4, column = 1, columnspan = 3)
 
 if __name__ == "__main__":
-    password1 = input("Enter Your MySQL Password: ")
+    print("Enter your MySQL Password Below: ")
+    password1 = getpass.getpass()
 
     root = Tk()
     root.title("Open Ended")
