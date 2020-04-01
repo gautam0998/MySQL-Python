@@ -40,7 +40,7 @@ def checktable(mydb, mycursor):
     if flag == FALSE:
         mycursor.execute("CREATE TABLE Products (id INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL, Price INT NOT NULL, Quantity INT NOT NULL)")
 
-def checkentries(mydb, mycursor):
+def checkentries(mydb, mycursor,upd,dele,disp):
     mycursor.execute("SELECT * FROM Products")
     myresult = mycursor.fetchall()
     if len(myresult) == 0:
@@ -404,7 +404,7 @@ def guestpage():
 
     mycursor = mydb.cursor()
     checktable(mydb, mycursor)
-    checkentries(mydb, mycursor)
+    checkentries(mydb, mycursor,upd,dele,disp)
     mycursor.close()
     mydb.close()
 
