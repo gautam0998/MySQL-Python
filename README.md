@@ -6,4 +6,3 @@ Prerequisites
 The system should have the latest Python downloaded and the Tkinter and mysql-connector-python module downloaded.
 The sytsem should also have MySQL installed which is available online for Free on the following link:
 https://dev.mysql.com/downloads/mysql/
-
