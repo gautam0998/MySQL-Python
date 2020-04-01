@@ -378,6 +378,25 @@ def displayres():
         Label(diswin, text=x[2]).grid(row=2+i,column=3)
         Label(diswin, text=x[3]).grid(row=2+i,column=4)
 
+def checkadmintable(mydb, mycursor):
+    #Check for Table
+    mycursor.execute("SHOW TABLES")
+    flag = FALSE
+    for x in mycursor:
+        for i in x:
+            if i == 'Admins':
+                flag = TRUE
+                break
+    
+    #Create table if it does not exist
+    if flag == FALSE:
+        mycursor.execute("CREATE TABLE Admins (username varchar(255) PRIMARY KEY, password VARCHAR(255) NOT NULL)")
+        sql = "INSERT INTO Admins (username, password) VALUES (%s, %s)"
+        val = ("root","root")
+        mycursor.execute(sql, val)
+        mydb.commit()
+    pass
+
 def guestpage():
     #user Window
     user = Toplevel(root)
@@ -415,6 +434,46 @@ def guestpage():
     mydb.close()
 
 def adminlogin():
+
+    def admincheck():
+        mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password=password1,
+        database="mydatabase"
+        )
+
+        mycursor = mydb.cursor()
+        if username.get() == "" or password.get() == "":
+            laberror.grid()
+
+        else:
+            checkadmintable(mydb,mycursor)
+            sql = "SELECT * FROM Admins WHERE username = '%s'"
+            val = (username.get())
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+
+            if len(myresult) == 0:
+                laberror.config(text = "No Account with the Username entered.")
+                laberror.grid()
+
+            else:
+                sql = "SELECT * FROM Admins WHERE username = '%s' AND password = '%s'"
+                val = (username.get(),password.get())
+                mycursor.execute(sql % val)
+                myresult = mycursor.fetchall()
+                if len(myresult) == 0:
+                    laberror.config(text = "Incorrect Password.")
+                    laberror.grid()
+                
+                else:
+                    admin.grab_release()
+                    admin.destroy()
+                    mycursor.close()
+                    mydb.cursor()
+                    guestpage()
+
     admin = Toplevel(root)
     admin.grab_set()
     admin.title("Login")
@@ -434,8 +493,12 @@ def adminlogin():
     password = Entry(admin, show = "*")
     password.grid(row = 3, column = 2)
 
-    subbut = Button(admin, text = "Submit")
-    subbut.grid(row = 4, column = 1, columnspan = 3)
+    laberror = Label(admin, text = "*Please fill all details", fg = 'red')
+    laberror.grid(row=4,column=1,columnspan=3)
+    laberror.grid_remove()
+
+    subbut = Button(admin, text = "Submit", command = admincheck)
+    subbut.grid(row = 5, column = 1, columnspan = 3)
 
 if __name__ == "__main__":
     flag = 1
