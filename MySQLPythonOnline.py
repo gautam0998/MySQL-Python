@@ -2,6 +2,7 @@
 from tkinter import *
 import mysql.connector
 import getpass
+import sys
 
 def checkdb():
     #Connecting
@@ -17,13 +18,13 @@ def checkdb():
     flag = FALSE
     for x in mycursor:
         for i in x:
-            if i == "mydatabase":
+            if i == "sql12330813":
                 flag = TRUE
                 break
 
     #create databse if not exists
     if flag == FALSE:
-        mycursor.execute("CREATE DATABASE mydatabase")
+        mycursor.execute("CREATE DATABASE sql12330813")
 
     mycursor.close()
     mydb.close()
@@ -109,7 +110,7 @@ def insertval(Name,Price,Quantity,buttons):
         host="sql12.freemysqlhosting.net",
         user="sql12330813",
         password="Y9n5gpupbd",
-        database="mydatabase"
+        database="sql12330813"
     )
     mycursor = mydb.cursor()
 
@@ -131,7 +132,7 @@ def updateform():
         host="sql12.freemysqlhosting.net",
         user="sql12330813",
         password="Y9n5gpupbd",
-        database="mydatabase"
+        database="sql12330813"
         )
         mycursor = mydb.cursor()
 
@@ -257,7 +258,7 @@ def deleteform(buttons):
         host="sql12.freemysqlhosting.net",
         user="sql12330813",
         password="Y9n5gpupbd",
-        database="mydatabase"
+        database="sql12330813"
         )
         mycursor = mydb.cursor()
         flag = 0
@@ -346,7 +347,7 @@ def displayres():
             host="sql12.freemysqlhosting.net",
             user="sql12330813",
             password="Y9n5gpupbd",
-            database="mydatabase"
+            database="sql12330813"
         )
 
     mycursor = mydb.cursor()
@@ -443,7 +444,7 @@ def guestpage():
             host="sql12.freemysqlhosting.net",
             user="sql12330813",
             password="Y9n5gpupbd",
-            database="mydatabase"
+            database="sql12330813"
         )
 
     mycursor = mydb.cursor()
@@ -479,7 +480,7 @@ def adminpage():
             host="sql12.freemysqlhosting.net",
             user="sql12330813",
             password="Y9n5gpupbd",
-            database="mydatabase"
+            database="sql12330813"
         )
 
     mycursor = mydb.cursor()
@@ -495,7 +496,7 @@ def adminlogin():
         host="sql12.freemysqlhosting.net",
         user="sql12330813",
         password="Y9n5gpupbd",
-        database="mydatabase"
+        database="sql12330813"
         )
 
         mycursor = mydb.cursor()
@@ -558,20 +559,17 @@ def adminlogin():
     checkdb()
 
 if __name__ == "__main__":
-    flag = 1
-    print("Enter your MySQL Password Below: ")
-    while(flag):
-        password1 = getpass.getpass()
-        try:
-            mydb = mysql.connector.connect(
-            host="sql12.freemysqlhosting.net",
-            user="sql12330813",
-            password="Y9n5gpupbd"
-            )
-            flag = 0
 
-        except:
-            print("Wrong Password. Enter again")
+    try:
+        mydb = mysql.connector.connect(
+        host="sql12.freemysqlhosting.net",
+        user="sql12330813",
+        password="Y9n5gpupbd"
+        )
+
+    except:
+        print("Check Internet Connection and try again")
+        sys.exit()
     
     
 
