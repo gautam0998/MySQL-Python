@@ -388,9 +388,7 @@ def displayres():
         tmp = Label(diswin, text=x[3])
         tmp.grid(row=2+i,column=4)
         l.append(tmp)
-        print(i)
         if i>=2:
-            print("Hello",i)
             b = Button(diswin, text = "Next Page", command = lambda: var.set(1))
             b.grid(row=3+i,column=1, columnspan=4)
             b.wait_variable(var)
