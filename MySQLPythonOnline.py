@@ -1,4 +1,4 @@
-#Local Database
+#Online Database
 from tkinter import *
 import mysql.connector
 import getpass
@@ -6,9 +6,9 @@ import getpass
 def checkdb():
     #Connecting
     mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password1
+        host="sql12.freemysqlhosting.net",
+        user="sql12330813",
+        password="Y9n5gpupbd"
     )
 
     #Check for database
@@ -106,9 +106,9 @@ def insertform(buttons):
 
 def insertval(Name,Price,Quantity,buttons):
     mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password1,
+        host="sql12.freemysqlhosting.net",
+        user="sql12330813",
+        password="Y9n5gpupbd",
         database="mydatabase"
     )
     mycursor = mydb.cursor()
@@ -128,9 +128,9 @@ def updateform():
         flag2 = 0  #to check if all the details are proper in second half
 
         mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password1,
+        host="sql12.freemysqlhosting.net",
+        user="sql12330813",
+        password="Y9n5gpupbd",
         database="mydatabase"
         )
         mycursor = mydb.cursor()
@@ -254,9 +254,9 @@ def deleteform(buttons):
 
     def deleteformcheck():
         mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password1,
+        host="sql12.freemysqlhosting.net",
+        user="sql12330813",
+        password="Y9n5gpupbd",
         database="mydatabase"
         )
         mycursor = mydb.cursor()
@@ -343,9 +343,9 @@ def deleteform(buttons):
 
 def displayres():
     mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=password1,
+            host="sql12.freemysqlhosting.net",
+            user="sql12330813",
+            password="Y9n5gpupbd",
             database="mydatabase"
         )
 
@@ -440,9 +440,9 @@ def guestpage():
 
     #connecting
     mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=password1,
+            host="sql12.freemysqlhosting.net",
+            user="sql12330813",
+            password="Y9n5gpupbd",
             database="mydatabase"
         )
 
@@ -476,9 +476,9 @@ def adminpage():
 
     #connecting
     mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=password1,
+            host="sql12.freemysqlhosting.net",
+            user="sql12330813",
+            password="Y9n5gpupbd",
             database="mydatabase"
         )
 
@@ -492,9 +492,9 @@ def adminlogin():
 
     def admincheck():
         mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=password1,
+        host="sql12.freemysqlhosting.net",
+        user="sql12330813",
+        password="Y9n5gpupbd",
         database="mydatabase"
         )
 
@@ -564,9 +564,9 @@ if __name__ == "__main__":
         password1 = getpass.getpass()
         try:
             mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password=password1,
+            host="sql12.freemysqlhosting.net",
+            user="sql12330813",
+            password="Y9n5gpupbd"
             )
             flag = 0
 
