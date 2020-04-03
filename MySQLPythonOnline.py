@@ -377,26 +377,28 @@ def displayres():
     l = []
     for x in myresult:
         i = i + 1
-        tmp = Label(diswin, text=x[0])
-        tmp.grid(row=2+i,column=1)
-        l.append(tmp)
-        tmp = Label(diswin, text=x[1])
-        tmp.grid(row=2+i,column=2)
-        l.append(tmp)
-        tmp = Label(diswin, text=x[2])
-        tmp.grid(row=2+i,column=3)
-        l.append(tmp)
-        tmp = Label(diswin, text=x[3])
-        tmp.grid(row=2+i,column=4)
-        l.append(tmp)
-        if i>=2:
+        if i>2:
             b = Button(diswin, text = "Next Page", command = lambda: var.set(1))
             b.grid(row=3+i,column=1, columnspan=4)
             b.wait_variable(var)
             b.destroy()
-            for x in l:
-                x.destroy()
-            i = 0
+            for s in l:
+                s.destroy()
+            i = 1
+
+        tmp = Label(diswin, text=str(x[0]))
+        tmp.grid(row=2+i,column=1)
+        l.append(tmp)
+        tmp = Label(diswin, text=str(x[1]))
+        tmp.grid(row=2+i,column=2)
+        l.append(tmp)
+        tmp = Label(diswin, text=str(x[2]))
+        tmp.grid(row=2+i,column=3)
+        l.append(tmp)
+        tmp = Label(diswin, text=str(x[3]))
+        tmp.grid(row=2+i,column=4)
+        l.append(tmp)
+
 
 def checkadmintable(mydb, mycursor):
     #Check for Table
