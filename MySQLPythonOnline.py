@@ -419,11 +419,11 @@ def checkadmintable(mydb, mycursor):
         mydb.commit()
     pass
 
-def guestpage():
+def employeepage():
     #user Window
     user = Toplevel(root)
     user.grab_set()
-    user.title("Guest User")
+    user.title("Employee User")
     user.geometry("300x300")
 
     ins = Button(user, text = "Insert Record", command = lambda: insertform(buttons))  #used lambda since a function cannot be passed values in command so created a new function
@@ -580,7 +580,7 @@ if __name__ == "__main__":
     adm = Button(root, text = "Administrator", command = adminlogin)
     adm.pack(fill = BOTH, expand = TRUE)
 
-    guest = Button(root, text = "Guest", command = guestpage)
-    guest.pack(fill = BOTH, expand = TRUE)
+    employee = Button(root, text = "Employee", command = employeepage)
+    employee.pack(fill = BOTH, expand = TRUE)
 
     root.mainloop()
