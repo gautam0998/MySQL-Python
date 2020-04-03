@@ -1,19 +1,16 @@
 #Online Database
 from tkinter import *
+from tkinter import messagebox
 import mysql.connector
 import getpass
 import sys
 
 def checkdb():
     #Connecting
-    mydb = mysql.connector.connect(
-        host="sql12.freemysqlhosting.net",
-        user="sql12330813",
-        password="Y9n5gpupbd"
-    )
-
+    bool = TRUE
+    while bool:
+        bool,mydb,mycursor = checkinternet(FALSE)
     #Check for database
-    mycursor = mydb.cursor()
     mycursor.execute("SHOW DATABASES")
     flag = FALSE
     for x in mycursor:
@@ -106,13 +103,8 @@ def insertform(buttons):
     subbut.grid(row=7,column=1, columnspan = 3,pady=20)
 
 def insertval(Name,Price,Quantity,buttons):
-    mydb = mysql.connector.connect(
-        host="sql12.freemysqlhosting.net",
-        user="sql12330813",
-        password="Y9n5gpupbd",
-        database="sql12330813"
-    )
-    mycursor = mydb.cursor()
+    while bool:
+        bool,mydb,mycursor = checkinternet(TRUE)
 
     sql = "INSERT INTO Products (Name, Price, Quantity) VALUES (%s, %s, %s)"
     val = (Name,Price,Quantity)
@@ -128,13 +120,8 @@ def updateform():
         flag1 = 0  #To check if all the details are proper in first half
         flag2 = 0  #to check if all the details are proper in second half
 
-        mydb = mysql.connector.connect(
-        host="sql12.freemysqlhosting.net",
-        user="sql12330813",
-        password="Y9n5gpupbd",
-        database="sql12330813"
-        )
-        mycursor = mydb.cursor()
+        while bool:
+            bool,mydb,mycursor = checkinternet(TRUE)
 
         if entname.get()== "" and entid.get() == "":
             laberror.config(text = "*Please fill either of the details")
@@ -254,13 +241,9 @@ def updateform():
 def deleteform(buttons):
 
     def deleteformcheck():
-        mydb = mysql.connector.connect(
-        host="sql12.freemysqlhosting.net",
-        user="sql12330813",
-        password="Y9n5gpupbd",
-        database="sql12330813"
-        )
-        mycursor = mydb.cursor()
+        while bool:
+            bool,mydb,mycursor = checkinternet(TRUE)
+
         flag = 0
         if entid.get() == "" and entname.get() == "":
             laberror.config(text = "*Please fill either of the details")
@@ -343,14 +326,9 @@ def deleteform(buttons):
     subbut.grid(row=4,column=1, columnspan = 3,pady=20)
 
 def displayres():
-    mydb = mysql.connector.connect(
-            host="sql12.freemysqlhosting.net",
-            user="sql12330813",
-            password="Y9n5gpupbd",
-            database="sql12330813"
-        )
+    while bool:
+        bool,mydb,mycursor = checkinternet(TRUE)
 
-    mycursor = mydb.cursor()
     diswin = Toplevel(root)
     diswin.grab_set()
 
@@ -399,7 +377,6 @@ def displayres():
         tmp.grid(row=2+i,column=4)
         l.append(tmp)
 
-
 def checkadmintable(mydb, mycursor):
     #Check for Table
     mycursor.execute("SHOW TABLES")
@@ -440,14 +417,9 @@ def employeepage():
     checkdb()
 
     #connecting
-    mydb = mysql.connector.connect(
-            host="sql12.freemysqlhosting.net",
-            user="sql12330813",
-            password="Y9n5gpupbd",
-            database="sql12330813"
-        )
+    while bool:
+        bool,mydb,mycursor = checkinternet(TRUE)
 
-    mycursor = mydb.cursor()
     checktable(mydb, mycursor)
     checkentries(mydb, mycursor,buttons)
     mycursor.close()
@@ -476,14 +448,9 @@ def adminpage():
     checkdb()
 
     #connecting
-    mydb = mysql.connector.connect(
-            host="sql12.freemysqlhosting.net",
-            user="sql12330813",
-            password="Y9n5gpupbd",
-            database="sql12330813"
-        )
+    while bool:
+        bool,mydb,mycursor = checkinternet(TRUE)
 
-    mycursor = mydb.cursor()
     checktable(mydb, mycursor)
     checkentries(mydb, mycursor,buttons)
     mycursor.close()
@@ -492,14 +459,9 @@ def adminpage():
 def adminlogin():
 
     def admincheck():
-        mydb = mysql.connector.connect(
-        host="sql12.freemysqlhosting.net",
-        user="sql12330813",
-        password="Y9n5gpupbd",
-        database="sql12330813"
-        )
+        while bool:
+            bool,mydb,mycursor = checkinternet(TRUE)
 
-        mycursor = mydb.cursor()
         if username.get() == "" or password.get() == "":
             laberror.grid()
 
@@ -558,20 +520,45 @@ def adminlogin():
 
     checkdb()
 
+def checkinternet(db=TRUE):
+    if db:
+        try:
+            mydb = mysql.connector.connect(
+            host="sql12.freemysqlhosting.net",
+            user="sql12330813",
+            password="Y9n5gpupbd"
+            )
+            mycursor = mydb.cursor()
+            return FALSE,mydb,mycursor
+
+        except:
+            bool1 = messagebox.askretrycancel("Disconnected", "Check Internet Connection and Try Agian or Cancel to quit.")
+            if not bool1:
+                sys.exit()
+                return FALSE,FALSE,FALSE
+            else:
+                return TRUE,FALSE,FALSE
+
+    else:
+        try:
+            mydb = mysql.connector.connect(
+            host="sql12.freemysqlhosting.net",
+            user="sql12330813",
+            password="Y9n5gpupbd",
+            database="sql12330813"
+            )
+            mycursor = mydb.cursor()
+            return FALSE,mydb,mycursor
+
+        except:
+            bool1 = messagebox.askretrycancel("Disconnected", "Check Internet Connection and Try Agian or Cancel to quit.")
+            if not bool1:
+                sys.exit()
+                return FALSE,FALSE,FALSE
+            else:
+                return TRUE,FALSE,FALSE
+
 if __name__ == "__main__":
-
-    try:
-        mydb = mysql.connector.connect(
-        host="sql12.freemysqlhosting.net",
-        user="sql12330813",
-        password="Y9n5gpupbd"
-        )
-
-    except:
-        print("Check Internet Connection and try again")
-        sys.exit()
-
-
 
     root = Tk()
     root.title("Open Ended")
@@ -582,5 +569,9 @@ if __name__ == "__main__":
 
     employee = Button(root, text = "Employee", command = employeepage)
     employee.pack(fill = BOTH, expand = TRUE)
+
+    bool = TRUE
+    while bool:
+        bool,_,_ = checkinternet(FALSE)
 
     root.mainloop()
