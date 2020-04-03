@@ -37,7 +37,7 @@ def checktable(mydb, mycursor):
             if i == 'Products':
                 flag = TRUE
                 break
-    
+
     #Create table if it does not exist
     if flag == FALSE:
         mycursor.execute("CREATE TABLE Products (id INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL, Price INT NOT NULL, Quantity INT NOT NULL)")
@@ -52,7 +52,7 @@ def checkentries(mydb, mycursor,buttons):
         upd['state'] = DISABLED
         dele['state'] = DISABLED
         disp['state'] = DISABLED
-    
+
     else:
         upd['state'] = NORMAL
         dele['state'] = NORMAL
@@ -65,7 +65,7 @@ def insertform(buttons):
         if entname.get()== "" or entprice.get() == "" or entquantity.get() == "":
             flag = 1
             laberror.grid()
-        
+
         else:
             flag = 0
             laberror.grid_remove()
@@ -73,13 +73,13 @@ def insertform(buttons):
             inswin.grab_release()   #makes the root window active again
             inswin.destroy()
 
-    
+
     inswin = Toplevel(root)
     inswin.grab_set()    #makes the root window inactive
     labtop = Label(inswin, text = "Insert Value")
     labtop.grid(row=0,column=1,columnspan = 3)
 
-    labname = Label(inswin, text = "Name: ") 
+    labname = Label(inswin, text = "Name: ")
     labname.grid(row=1,column=1,pady=20,sticky=W)
 
     labprice = Label(inswin, text = "Price: ")
@@ -120,7 +120,7 @@ def insertval(Name,Price,Quantity,buttons):
     checkentries(mydb,mycursor,buttons)
     mydb.close()
     mycursor.close()
-    
+
 def updateform():
 
     def updateformcheck():
@@ -166,7 +166,7 @@ def updateform():
             elif len(myresult) >= 2:
                 laberror.config(text = "*Multiple Records with the Name Entered. Please enter the ID instead.")
                 laberror.grid()
-            
+
             else:
                 flag1 = 1
                 laberror.grid_remove()
@@ -187,7 +187,7 @@ def updateform():
             mydb.close()
             updwin.grab_release()
             updwin.destroy()
-        
+
         elif flag1 == 1 and flag2 == 1 and entname.get() != "":
             sql = "UPDATE Products SET Name = '%s', Price = %s, Quantity = %s WHERE Name = '%s'"
             val = (entname1.get(),entprice1.get(),entquantity1.get(),entname.get())
@@ -200,14 +200,14 @@ def updateform():
 
     updwin = Toplevel(root)
     updwin.grab_set()
-    
+
     labtop = Label(updwin, text = "Enter either ID or Name of the record to be updated: ")
     labtop.grid(row=0,column=1,columnspan=3)
 
-    labid = Label(updwin, text = "ID: ") 
+    labid = Label(updwin, text = "ID: ")
     labid.grid(row=1,column=1,pady=20,sticky=W)
 
-    labname = Label(updwin, text = "Name: ") 
+    labname = Label(updwin, text = "Name: ")
     labname.grid(row=2,column=1,pady=20,sticky=W)
 
     entid = Entry(updwin)
@@ -225,7 +225,7 @@ def updateform():
     labtwo = Label(updwin, text = "Enter the new values: ")
     labtwo.grid(row=5,column=1,columnspan=3,pady=20,sticky=W)
 
-    labname1 = Label(updwin, text = "Name: ") 
+    labname1 = Label(updwin, text = "Name: ")
     labname1.grid(row=6,column=1,pady=20,sticky=W)
 
     labprice1 = Label(updwin, text = "Price: ")
@@ -264,7 +264,7 @@ def deleteform(buttons):
         if entid.get() == "" and entname.get() == "":
             laberror.config(text = "*Please fill either of the details")
             laberror.grid()
-        
+
         elif entid.get() != "":
             sql = "SELECT * FROM Products WHERE id = %s"
             val = (entid.get())
@@ -301,7 +301,7 @@ def deleteform(buttons):
             elif len(myresult) >= 2:
                 laberror.config(text = "*Multiple Records with the Name Entered. Please enter the ID instead.")
                 laberror.grid()
-            
+
             else:
                 flag = 1
                 sql = "DELETE FROM Products WHERE Name = '%s'"
@@ -318,14 +318,14 @@ def deleteform(buttons):
 
     delwin = Toplevel(root)
     delwin.grab_set()
-    
+
     labtop = Label(delwin, text = "Enter either ID or Name of the record to be Deleted: ")
     labtop.grid(row=0,column=1,columnspan=3)
 
-    labid = Label(delwin, text = "ID: ") 
+    labid = Label(delwin, text = "ID: ")
     labid.grid(row=1,column=1,pady=20,sticky=W)
 
-    labname = Label(delwin, text = "Name: ") 
+    labname = Label(delwin, text = "Name: ")
     labname.grid(row=2,column=1,pady=20,sticky=W)
 
     entid = Entry(delwin)
@@ -367,7 +367,7 @@ def displayres():
 
     labquantity = Label(diswin, text = "Quantity")
     labquantity.grid(row=2,column=4,padx=10)
-    
+
     mycursor.execute("SELECT * FROM Products")
     myresult = mycursor.fetchall()
     results = Listbox(diswin)
@@ -376,27 +376,28 @@ def displayres():
     l = []
     for x in myresult:
         i = i + 1
-        tmp = Label(diswin, text=x[0])
-        tmp.grid(row=2+i,column=1)
-        l.append(tmp)
-        tmp = Label(diswin, text=x[1])
-        tmp.grid(row=2+i,column=2)
-        l.append(tmp)
-        tmp = Label(diswin, text=x[2])
-        tmp.grid(row=2+i,column=3)
-        l.append(tmp)
-        tmp = Label(diswin, text=x[3])
-        tmp.grid(row=2+i,column=4)
-        l.append(tmp)
-        if i>=2:
+        if i>2:
             b = Button(diswin, text = "Next Page", command = lambda: var.set(1))
             b.grid(row=3+i,column=1, columnspan=4)
             b.wait_variable(var)
             b.destroy()
-            for x in l:
-                x.destroy()
-            i = 0
+            for s in l:
+                s.destroy()
+            i = 1
             
+        tmp = Label(diswin, text=str(x[0]))
+        tmp.grid(row=2+i,column=1)
+        l.append(tmp)
+        tmp = Label(diswin, text=str(x[1]))
+        tmp.grid(row=2+i,column=2)
+        l.append(tmp)
+        tmp = Label(diswin, text=str(x[2]))
+        tmp.grid(row=2+i,column=3)
+        l.append(tmp)
+        tmp = Label(diswin, text=str(x[3]))
+        tmp.grid(row=2+i,column=4)
+        l.append(tmp)
+
 def checkadmintable(mydb, mycursor):
     #Check for Table
     mycursor.execute("SHOW TABLES")
@@ -406,7 +407,7 @@ def checkadmintable(mydb, mycursor):
             if i == 'Admins':
                 flag = TRUE
                 break
-    
+
     #Create table if it does not exist
     if flag == FALSE:
         mycursor.execute("CREATE TABLE Admins (username varchar(255) PRIMARY KEY, password VARCHAR(255) NOT NULL)")
@@ -485,7 +486,7 @@ def adminpage():
     checkentries(mydb, mycursor,buttons)
     mycursor.close()
     mydb.close()
-    
+
 def adminlogin():
 
     def admincheck():
@@ -519,7 +520,7 @@ def adminlogin():
                 if len(myresult) == 0:
                     laberror.config(text = "Incorrect Password.")
                     laberror.grid()
-                
+
                 else:
                     admin.grab_release()
                     admin.destroy()
@@ -570,8 +571,8 @@ if __name__ == "__main__":
 
         except:
             print("Wrong Password. Enter again")
-    
-    
+
+
 
     root = Tk()
     root.title("Open Ended")
