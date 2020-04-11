@@ -1,9 +1,14 @@
 #Online Database
 from tkinter import *
 from tkinter import messagebox
-import mysql.connector
-import getpass
-import sys
+import sys,os
+
+try:
+    import mysql.connector
+except:
+    os.system("pip install mysql-connector-python")
+    import mysql.connector
+    os.system("clear")
 
 def checkdb():
     #Connecting
@@ -57,15 +62,30 @@ def checkentries(mydb, mycursor,buttons):
         disp['state'] = NORMAL
 
 def insertform(buttons):
-    flag=0   #used to show and hide the error label
+      #used to show and hide the error label
     def insertformcheck():
-        nonlocal flag
+        flag = 0
         if entname.get()== "" or entprice.get() == "" or entquantity.get() == "":
             flag = 1
             laberror.grid()
 
-        else:
-            flag = 0
+        if flag==0:
+            try:
+                float(entprice.get())
+            except:
+                flag = 1
+                laberror.config(text = "*Please enter valid Price")
+                laberror.grid()
+
+        if flag==0:
+            try:
+                int(entquantity.get())
+            except:
+                flag = 1
+                laberror.config(text = "*Please enter valid Quantity")
+                laberror.grid()
+
+        if flag==0:
             laberror.grid_remove()
             insertval(entname.get(),float(entprice.get()),float(entquantity.get()),buttons)
             inswin.grab_release()   #makes the root window active again
@@ -103,6 +123,7 @@ def insertform(buttons):
     subbut.grid(row=7,column=1, columnspan = 3,pady=20)
 
 def insertval(Name,Price,Quantity,buttons):
+    bool = TRUE
     while bool:
         bool,mydb,mycursor = checkinternet(TRUE)
 
@@ -117,29 +138,38 @@ def insertval(Name,Price,Quantity,buttons):
 def updateform():
 
     def updateformcheck():
-        flag1 = 0  #To check if all the details are proper in first half
-        flag2 = 0  #to check if all the details are proper in second half
+        flag1 = 0 #To check if all the details are proper in first half (1: Working, 0: Not Working)
+        flag2 = 1  #to check if all the details are proper in second half (1: Working, 0: Not Working)
 
+        bool = TRUE
         while bool:
             bool,mydb,mycursor = checkinternet(TRUE)
 
         if entname.get()== "" and entid.get() == "":
+            flag1 = 0
             laberror.config(text = "*Please fill either of the details")
             laberror.grid()
 
         elif entid.get() != "":
-            sql = "SELECT * FROM Products WHERE id = %s"
-            val = (entid.get())
-            mycursor.execute(sql % val)
-            myresult = mycursor.fetchall()
+            try:
+                int(entid.get())
+                sql = "SELECT * FROM Products WHERE id = %s"
+                val = (entid.get())
+                mycursor.execute(sql % val)
+                myresult = mycursor.fetchall()
 
-            if len(myresult) == 0:
-                laberror.config(text = "*No Entry with the ID entered. Please enter valid ID")
+                if len(myresult) == 0:
+                    flag1 = 0
+                    laberror.config(text = "*No Entry with the ID entered. Please enter valid ID")
+                    laberror.grid()
+
+                else:
+                    flag1 = 1
+                    laberror.grid_remove()
+            except:
+                flag1 = 0
+                laberror.config(text = "*Please enter valid ID")
                 laberror.grid()
-
-            else:
-                flag1 = 1
-                laberror.grid_remove()
 
         elif flag1 == 0 and entname.get() != "":
             sql = "SELECT * FROM Products WHERE Name = '%s'"
@@ -161,8 +191,28 @@ def updateform():
 
 
         if entname1.get()== "" or entprice1.get() == "" or entquantity1.get() == "":
+            flag2 = 0
             laberror1.grid()
-        else:
+
+        if flag2 == 1:
+            try:
+                float(entprice1.get())
+            except:
+                print("Hello1")
+                flag2 = 0
+                laberror1.config(text = "*Please enter valid Price")
+                laberror1.grid()
+
+        if flag2 == 1:
+            try:
+                int(entquantity1.get())
+            except:
+                print("Hello2")
+                flag2 = 0
+                laberror1.config(text = "*Please enter valid Quantity")
+                laberror1.grid()
+
+        if flag2 == 1:
             flag2 = 1
             laberror1.grid_remove()
 
@@ -241,8 +291,16 @@ def updateform():
 def deleteform(buttons):
 
     def deleteformcheck():
+        bool = TRUE
         while bool:
             bool,mydb,mycursor = checkinternet(TRUE)
+
+        try:
+            int(entid.get())
+        except:
+            laberror.config(text = "*Please enter a valid ID")
+            laberror.grid()
+            return TRUE
 
         flag = 0
         if entid.get() == "" and entname.get() == "":
@@ -326,6 +384,7 @@ def deleteform(buttons):
     subbut.grid(row=4,column=1, columnspan = 3,pady=20)
 
 def displayres():
+    bool = TRUE
     while bool:
         bool,mydb,mycursor = checkinternet(TRUE)
 
@@ -417,6 +476,7 @@ def employeepage():
     checkdb()
 
     #connecting
+    bool = TRUE
     while bool:
         bool,mydb,mycursor = checkinternet(TRUE)
 
@@ -448,6 +508,7 @@ def adminpage():
     checkdb()
 
     #connecting
+    bool = TRUE
     while bool:
         bool,mydb,mycursor = checkinternet(TRUE)
 
@@ -459,6 +520,7 @@ def adminpage():
 def adminlogin():
 
     def admincheck():
+        bool = TRUE
         while bool:
             bool,mydb,mycursor = checkinternet(TRUE)
 
@@ -526,7 +588,8 @@ def checkinternet(db=TRUE):
             mydb = mysql.connector.connect(
             host="sql12.freemysqlhosting.net",
             user="sql12330813",
-            password="Y9n5gpupbd"
+            password="Y9n5gpupbd",
+            database="sql12330813"
             )
             mycursor = mydb.cursor()
             return FALSE,mydb,mycursor
@@ -544,8 +607,7 @@ def checkinternet(db=TRUE):
             mydb = mysql.connector.connect(
             host="sql12.freemysqlhosting.net",
             user="sql12330813",
-            password="Y9n5gpupbd",
-            database="sql12330813"
+            password="Y9n5gpupbd"
             )
             mycursor = mydb.cursor()
             return FALSE,mydb,mycursor
