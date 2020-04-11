@@ -1,7 +1,13 @@
 #Local Database
 from tkinter import *
-import mysql.connector
 import getpass
+
+try:
+    import mysql.connector
+except:
+    os.system("pip install mysql-connector-python")
+    import mysql.connector
+    os.system("clear")
 
 def checkdb():
     #Connecting
