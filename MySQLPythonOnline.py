@@ -62,7 +62,6 @@ def checkentries(mydb, mycursor,buttons):
         disp['state'] = NORMAL
 
 def insertform(buttons):
-      #used to show and hide the error label
     def insertformcheck():
         flag = 0
         if entname.get()== "" or entprice.get() == "" or entquantity.get() == "":
@@ -136,7 +135,6 @@ def insertval(Name,Price,Quantity,buttons):
     mycursor.close()
 
 def updateform():
-
     def updateformcheck():
         flag1 = 0 #To check if all the details are proper in first half (1: Working, 0: Not Working)
         flag2 = 1  #to check if all the details are proper in second half (1: Working, 0: Not Working)
@@ -198,7 +196,6 @@ def updateform():
             try:
                 float(entprice1.get())
             except:
-                print("Hello1")
                 flag2 = 0
                 laberror1.config(text = "*Please enter valid Price")
                 laberror1.grid()
@@ -207,7 +204,6 @@ def updateform():
             try:
                 int(entquantity1.get())
             except:
-                print("Hello2")
                 flag2 = 0
                 laberror1.config(text = "*Please enter valid Quantity")
                 laberror1.grid()
@@ -620,6 +616,9 @@ def checkinternet(db=TRUE):
             else:
                 return TRUE,FALSE,FALSE
 
+def exitfunc():
+    root.destroy()
+
 if __name__ == "__main__":
 
     root = Tk()
@@ -631,6 +630,9 @@ if __name__ == "__main__":
 
     employee = Button(root, text = "Employee", command = employeepage)
     employee.pack(fill = BOTH, expand = TRUE)
+
+    exitbut = Button(root, text = "Exit", command = exitfunc)
+    exitbut.pack(fill = BOTH, expand = TRUE)
 
     bool = TRUE
     while bool:

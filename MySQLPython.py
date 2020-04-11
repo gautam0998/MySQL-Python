@@ -65,20 +65,33 @@ def checkentries(mydb, mycursor,buttons):
         disp['state'] = NORMAL
 
 def insertform(buttons):
-    flag=0   #used to show and hide the error label
     def insertformcheck():
-        nonlocal flag
+        flag = 0
         if entname.get()== "" or entprice.get() == "" or entquantity.get() == "":
             flag = 1
             laberror.grid()
 
-        else:
-            flag = 0
+        if flag==0:
+            try:
+                float(entprice.get())
+            except:
+                flag = 1
+                laberror.config(text = "*Please enter valid Price")
+                laberror.grid()
+
+        if flag==0:
+            try:
+                int(entquantity.get())
+            except:
+                flag = 1
+                laberror.config(text = "*Please enter valid Quantity")
+                laberror.grid()
+
+        if flag==0:
             laberror.grid_remove()
             insertval(entname.get(),float(entprice.get()),float(entquantity.get()),buttons)
             inswin.grab_release()   #makes the root window active again
             inswin.destroy()
-
 
     inswin = Toplevel(root)
     inswin.grab_set()    #makes the root window inactive
@@ -128,10 +141,9 @@ def insertval(Name,Price,Quantity,buttons):
     mycursor.close()
 
 def updateform():
-
     def updateformcheck():
-        flag1 = 0  #To check if all the details are proper in first half
-        flag2 = 0  #to check if all the details are proper in second half
+        flag1 = 0  #To check if all the details are proper in first half (1: Working, 0: Not Working)
+        flag2 = 1  #to check if all the details are proper in second half (1: Working, 0: Not Working)
 
         mydb = mysql.connector.connect(
         host="localhost",
@@ -142,22 +154,30 @@ def updateform():
         mycursor = mydb.cursor()
 
         if entname.get()== "" and entid.get() == "":
+            flag1 = 0
             laberror.config(text = "*Please fill either of the details")
             laberror.grid()
 
         elif entid.get() != "":
-            sql = "SELECT * FROM Products WHERE id = %s"
-            val = (entid.get())
-            mycursor.execute(sql % val)
-            myresult = mycursor.fetchall()
+            try:
+                int(entid.get())
+                sql = "SELECT * FROM Products WHERE id = %s"
+                val = (entid.get())
+                mycursor.execute(sql % val)
+                myresult = mycursor.fetchall()
 
-            if len(myresult) == 0:
-                laberror.config(text = "*No Entry with the ID entered. Please enter valid ID")
+                if len(myresult) == 0:
+                    flag1 = 0
+                    laberror.config(text = "*No Entry with the ID entered. Please enter valid ID")
+                    laberror.grid()
+
+                else:
+                    flag1 = 1
+                    laberror.grid_remove()
+            except:
+                flag1 = 0
+                laberror.config(text = "*Please enter valid ID")
                 laberror.grid()
-
-            else:
-                flag1 = 1
-                laberror.grid_remove()
 
         elif flag1 == 0 and entname.get() != "":
             sql = "SELECT * FROM Products WHERE Name = '%s'"
@@ -177,10 +197,27 @@ def updateform():
                 flag1 = 1
                 laberror.grid_remove()
 
-
         if entname1.get()== "" or entprice1.get() == "" or entquantity1.get() == "":
+            flag2 = 0
             laberror1.grid()
-        else:
+
+        if flag2 == 1:
+            try:
+                float(entprice1.get())
+            except:
+                flag2 = 0
+                laberror1.config(text = "*Please enter valid Price")
+                laberror1.grid()
+
+        if flag2 == 1:
+            try:
+                int(entquantity1.get())
+            except:
+                flag2 = 0
+                laberror1.config(text = "*Please enter valid Quantity")
+                laberror1.grid()
+
+        if flag2 == 1:
             flag2 = 1
             laberror1.grid_remove()
 
@@ -266,6 +303,14 @@ def deleteform(buttons):
         database="mydatabase"
         )
         mycursor = mydb.cursor()
+
+        try:
+            int(entid.get())
+        except:
+            laberror.config(text = "*Please enter a valid ID")
+            laberror.grid()
+            return TRUE
+            
         flag = 0
         if entid.get() == "" and entname.get() == "":
             laberror.config(text = "*Please fill either of the details")
@@ -562,6 +607,9 @@ def adminlogin():
 
     checkdb()
 
+def exitfunc():
+    root.destroy()
+
 if __name__ == "__main__":
     flag = 1
     print("Enter your MySQL Password Below: ")
@@ -589,5 +637,8 @@ if __name__ == "__main__":
 
     employee = Button(root, text = "Employee", command = employeepage)
     employee.pack(fill = BOTH, expand = TRUE)
+
+    exitbut = Button(root, text = "Exit", command = exitfunc)
+    exitbut.pack(fill = BOTH, expand = TRUE)
 
     root.mainloop()
