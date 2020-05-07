@@ -20,13 +20,13 @@ def checkdb():
     flag = FALSE
     for x in mycursor:
         for i in x:
-            if i == "sql12330813":
+            if i == "W92GYaD2iP":
                 flag = TRUE
                 break
 
     #create databse if not exists
     if flag == FALSE:
-        mycursor.execute("CREATE DATABASE sql12330813")
+        mycursor.execute("CREATE DATABASE W92GYaD2iP")
 
     mycursor.close()
     mydb.close()
@@ -582,10 +582,10 @@ def checkinternet(db=TRUE):
     if db:
         try:
             mydb = mysql.connector.connect(
-            host="sql12.freemysqlhosting.net",
-            user="sql12330813",
-            password="Y9n5gpupbd",
-            database="sql12330813"
+            host="remotemysql.com",
+            user="W92GYaD2iP",
+            password="OYk5ge5xlW",
+            database="W92GYaD2iP"
             )
             mycursor = mydb.cursor()
             return FALSE,mydb,mycursor
@@ -601,9 +601,9 @@ def checkinternet(db=TRUE):
     else:
         try:
             mydb = mysql.connector.connect(
-            host="sql12.freemysqlhosting.net",
-            user="sql12330813",
-            password="Y9n5gpupbd"
+            host="remotemysql.com",
+            user="W92GYaD2iP",
+            password="OYk5ge5xlW"
             )
             mycursor = mydb.cursor()
             return FALSE,mydb,mycursor
