@@ -619,6 +619,260 @@ def checkinternet(db=TRUE):
 def exitfunc():
     root.destroy()
 
+def checkcustomertable():
+    bool = TRUE
+    checkdb()
+    while bool:
+        bool,mydb,mycursor = checkinternet(TRUE)
+
+    mycursor.execute("SHOW TABLES")
+    flag = FALSE
+    for x in mycursor:
+        for i in x:
+            if i == 'Customers':
+                flag = TRUE
+                break
+
+    #Create table if it does not exist
+    if flag == FALSE:
+        mycursor.execute("CREATE TABLE Customers (id INT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(255) NOT NULL, Mobile BIGINT NOT NULL, Email varchar(255) NOT NULL)")
+
+def oldcustomer():
+    custdetail = {}
+    def oldcustomercheck():
+        nonlocal custdetail
+        bool = TRUE
+        flag1 = 0
+        while bool:
+            bool,mydb,mycursor = checkinternet(TRUE)
+
+        if entmobile.get() == "" and entid.get() == "" and entemail.get() == "":
+            laberror.config(text = "*Please Enter any one of the above")
+            laberror.grid()
+
+        elif entid.get() != "":
+            try:
+                int(entid.get())
+            except:
+                laberror.config(text = "*Please Enter a valid ID")
+                laberror.grid()
+                return
+
+            sql = "SELECT * FROM Customers WHERE id = %s"
+            val = (entid.get())
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+
+            if len(myresult) == 0:
+                laberror.config(text = "*No Entry with the ID entered. Please enter valid ID")
+                laberror.grid()
+
+            else:
+                for x in myresult:
+                    custdetail["ID"] = x[0]
+                    custdetail["Name"] = x[1]
+                    custdetail["Mobile"] = x[2]
+                    custdetail["Email"] = x[3]
+                mycursor.close()
+                mydb.close()
+                flag1 = 1
+                laberror.grid_remove()
+                oc.grab_release()
+                oc.destroy()
+
+        elif flag1 == 0 and entmobile.get() != "":
+            try:
+                int(entmobile.get())
+            except:
+                laberror.config(text = "*Please enter a valid Mobile Number")
+                laberror.grid()
+                return
+
+            if int(entmobile.get())<1000000000 or int(entmobile.get())>9999999999:
+                laberror.config(text = "*Please enter a 10 digit Number")
+                laberror.grid()
+                return
+
+            sql = "SELECT * FROM Customers WHERE Mobile = %s"
+            val = entmobile.get()
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+
+            if len(myresult) == 0:
+                laberror.config(text = "*No Entry with the Mobile Number entered. Please enter valid Mobile Number")
+                laberror.grid()
+
+            else:
+                for x in myresult:
+                    custdetail["ID"] = x[0]
+                    custdetail["Name"] = x[1]
+                    custdetail["Mobile"] = x[2]
+                    custdetail["Email"] = x[3]
+                mycursor.close()
+                mydb.close()
+                flag1 = 1
+                laberror.grid_remove()
+                oc.grab_release()
+                oc.destroy()
+
+        elif flag1 == 0 and entemail.get() != "":
+            sql = "SELECT * FROM Customers WHERE Email = '%s'"
+            val = entemail.get()
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+
+            if len(myresult) == 0:
+                laberror.config(text = "*No Entry with the Email entered. Please enter valid Email")
+                laberror.grid()
+
+            else:
+                for x in myresult:
+                    custdetail["ID"] = x[0]
+                    custdetail["Name"] = x[1]
+                    custdetail["Mobile"] = x[2]
+                    custdetail["Email"] = x[3]
+                mycursor.close()
+                mydb.close()
+                flag1 = 1
+                laberror.grid_remove()
+                oc.grab_release()
+                oc.destroy()
+
+
+    oc = Toplevel(root)
+    oc.grab_set()
+
+    labtop = Label(oc, text = "Enter either ID or Mobile Number or Email")
+    labtop.grid(row = 1, column = 1, columnspan = 3)
+
+    labid = Label(oc, text = "ID: ")
+    labid.grid(row = 2, column = 1, pady = 20, sticky = W)
+
+    labmobile = Label(oc, text = "Mobile Number: ")
+    labmobile.grid(row = 3, column = 1, pady = 20, sticky = W)
+
+    labemail = Label(oc, text = "Email: ")
+    labemail.grid(row = 4, column = 1, pady = 20, sticky = W)
+
+    entid = Entry(oc)
+    entid.grid(row = 2, column = 2)
+
+    entmobile = Entry(oc)
+    entmobile.grid(row = 3, column = 2)
+
+    entemail = Entry(oc)
+    entemail.grid(row = 4, column = 2)
+
+    laberror = Label(oc, fg = "red")
+    laberror.grid(row = 5, column = 1, columnspan = 3, pady = 20, sticky = W)
+    laberror.grid_remove()
+
+    subbut = Button(oc, text = "Submit", command = oldcustomercheck)
+    subbut.grid(row = 6, column = 1, columnspan = 3, pady = 20)
+
+def newcustomer():
+    custdetail = {}
+    def newcustomercheck():
+        nonlocal custdetail
+        bool = TRUE
+        while bool:
+            bool,mydb,mycursor = checkinternet(TRUE)
+        if entname.get()=="" or entmobile.get()=="" or entemail.get()=="":
+             laberror.config(text = "*Please enter all the details")
+             laberror.grid()
+        else:
+            if int(entmobile.get())<1000000000 or int(entmobile.get())>9999999999:
+                laberror.config(text = "*Please enter a 10 digit Number")
+                laberror.grid()
+                return
+            try:
+                int(entmobile.get())
+            except:
+                laberror.config(text = "*Please enter a 10 digit Mobile Number")
+                laberror.grid()
+                return
+
+            sql = "SELECT * FROM Customers WHERE Mobile = %s"
+            val = entmobile.get()
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+            if len(myresult) > 0:
+                laberror.config(text = "*Customer with the same Mobile Number exists. Enter new Mobile Number")
+                laberror.grid()
+                return
+
+            sql = "SELECT * FROM Customers WHERE Email = '%s'"
+            val = entemail.get()
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+            if len(myresult) > 0:
+                laberror.config(text = "*Customer with the same Email exists. Enter new Email")
+                laberror.grid()
+                return
+
+            sql = "INSERT INTO Customers (Name, Mobile, Email) VALUES (%s, %s, %s)"
+            val = (entname.get(),entmobile.get(),entemail.get())
+            mycursor.execute(sql, val)
+            mydb.commit()
+            sql = "SELECT * FROM Customers WHERE Mobile = %s"
+            val = entmobile.get()
+            mycursor.execute(sql % val)
+            myresult = mycursor.fetchall()
+            for x in myresult:
+                custdetail["ID"] = x[0]
+                custdetail["Name"] = x[1]
+                custdetail["Mobile"] = x[2]
+                custdetail["Email"] = x[3]
+            mycursor.close()
+            mydb.close()
+            nc.grab_release()
+            nc.destroy()
+
+    nc = Toplevel(root)
+    nc.grab_set()
+
+    labtop = Label(nc, text = "Insert Value")
+    labtop.grid(row=1,column=1,columnspan = 3)
+
+    labname = Label(nc, text = "Name: ")
+    labname.grid(row=2,column=1,pady=20,sticky=W)
+
+    labmobile = Label(nc, text = "Mobile: ")
+    labmobile.grid(row=3,column=1,pady=20,sticky=W)
+
+    labemail = Label(nc, text = "Email: ")
+    labemail.grid(row=4,column=1,pady=20,sticky=W)
+
+    entname = Entry(nc)
+    entname.grid(row=2,column=2)
+
+    entmobile = Entry(nc)
+    entmobile.grid(row=3,column=2)
+
+    entemail = Entry(nc)
+    entemail.grid(row=4, column=2)
+
+    laberror = Label(nc, fg = "red")
+    laberror.grid(row=5, column=1, columnspan = 3)
+    laberror.grid_remove()
+
+    subbut = Button(nc, text = "Submit", command = newcustomercheck)
+    subbut.grid(row=6, column=1, columnspan = 3, pady=20)
+
+def billpage():
+    bill = Toplevel(root)
+    bill.grab_set()
+    bill.title("Customer")
+    bill.geometry("300x300")
+
+    custold = Button(bill, text = "Old Customer", command = oldcustomer)
+    custold.pack(fill = BOTH, expand = TRUE)
+
+    custnew = Button(bill, text = "New Customer", command = newcustomer)
+    custnew.pack(fill = BOTH, expand = TRUE)
+
+    checkcustomertable()
+
 if __name__ == "__main__":
 
     root = Tk()
@@ -630,6 +884,9 @@ if __name__ == "__main__":
 
     employee = Button(root, text = "Employee", command = employeepage)
     employee.pack(fill = BOTH, expand = TRUE)
+
+    billgen = Button(root, text = "New Bill", command = billpage)
+    billgen.pack(fill = BOTH, expand = TRUE)
 
     exitbut = Button(root, text = "Exit", command = exitfunc)
     exitbut.pack(fill = BOTH, expand = TRUE)
